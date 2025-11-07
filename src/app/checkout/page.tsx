@@ -139,7 +139,7 @@ export default function CheckoutPage() {
               <strong>Email:</strong> {email}
             </p>
             <p className="text-gray-700 mb-2">
-              <strong>Total:</strong> ₹{formatPrice(receipt.total)}
+              <strong>Total:</strong> {formatPrice(receipt.total)}
             </p>
             <p className="text-gray-600">
               <strong>Date:</strong>{" "}

@@ -44,7 +44,7 @@ export default function CartPage() {
   if (loading) return <div className="p-6">Loading cart...</div>;
 
   return (
-    <main className="p-6">
+    <main className="p-6 max-w-3xl mx-auto relative">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
       {cart.length === 0 ? (
