@@ -38,11 +38,19 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
+      const payload = {
+        name,
+        email,
+        cartItems: cartItems.map((item) => ({
+          productId: item.product._id,
+          qty: item.qty,
+        })),
+      };
       const data = await fetchAPI("/checkout", {
         method: "POST",
-        body: JSON.stringify({ cartItems }),
+        body: JSON.stringify(payload),
       });
-      setReceipt(data);
+      setReceipt(data.receipt);
     } catch (err) {
       console.error(err);
       alert("Checkout failed");
@@ -51,25 +59,13 @@ export default function CheckoutPage() {
     }
   };
 
-  if (receipt) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center p-6">
-        <h1 className="text-3xl font-bold mb-4 text-green-600">
-          Order Successful!
-        </h1>
-        <p className="text-lg mb-2">Total: ₹{receipt.total}</p>
-        <p className="text-gray-600 mb-2">
-          Timestamp: {new Date(receipt.timestamp).toLocaleString()}
-        </p>
-        <p className="text-gray-700">Thank you for your order, {name}!</p>
-      </div>
-    );
-  }
+  const closeModal = () => setReceipt(null);
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center"> Checkout</h1>
+    <main className="p-6 max-w-3xl mx-auto relative">
+      <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
 
+      {/* Cart Summary */}
       <section className="border rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-2">Cart Summary</h2>
         {cartItems.length === 0 ? (
@@ -94,6 +90,7 @@ export default function CheckoutPage() {
         )}
       </section>
 
+      {/* User Details */}
       <section className="border rounded-lg p-4">
         <h2 className="text-xl font-semibold mb-4">Your Details</h2>
         <input
@@ -118,6 +115,40 @@ export default function CheckoutPage() {
           {loading ? "Processing..." : "Place Order"}
         </button>
       </section>
+
+      {/*  Receipt Modal */}
+      {receipt && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white w-96 p-6 rounded-2xl shadow-xl text-center">
+            <h2 className="text-2xl font-semibold text-green-600 mb-2">
+              Order Successful!
+            </h2>
+            <p className="text-lg mb-1 font-medium">
+              Thank you for your order!
+            </p>
+            <p className="text-gray-700 mb-2">
+              <strong>Name:</strong> {name}
+            </p>
+            <p className="text-gray-700 mb-2">
+              <strong>Email:</strong> {email}
+            </p>
+            <p className="text-gray-700 mb-2">
+              <strong>Total:</strong> ₹{receipt.total}
+            </p>
+            <p className="text-gray-600">
+              <strong>Date:</strong>{" "}
+              {new Date(receipt.timestamp).toLocaleString()}
+            </p>
+
+            <button
+              onClick={closeModal}
+              className="cursor-pointer mt-5 bg-gray-800 text-white px-5 py-2 rounded-md hover:bg-gray-900"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
