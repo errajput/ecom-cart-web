@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { fetchAPI } from "@/lib/api";
 import { CartItem } from "@/lib/types";
+import { formatPrice } from "@/utils/format";
+import { useRouter } from "next/navigation";
 
 interface Receipt {
   total: number;
@@ -15,6 +17,8 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   // Fetch cart items on mount
   useEffect(() => {
@@ -58,8 +62,10 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
-
-  const closeModal = () => setReceipt(null);
+  const closeModal = () => {
+    setReceipt(null);
+    router.push("/");
+  };
 
   return (
     <main className="p-6 max-w-3xl mx-auto relative">
@@ -80,11 +86,11 @@ export default function CheckoutPage() {
                 <span>
                   {item.product.name} (x{item.qty})
                 </span>
-                <span>₹{item.product.price * item.qty}</span>
+                <span>{formatPrice(item.product.price * item.qty)}</span>
               </div>
             ))}
             <div className="text-right font-bold text-lg mt-4">
-              Total: ₹{total}
+              Total: {formatPrice(total)}
             </div>
           </>
         )}
@@ -133,7 +139,7 @@ export default function CheckoutPage() {
               <strong>Email:</strong> {email}
             </p>
             <p className="text-gray-700 mb-2">
-              <strong>Total:</strong> ₹{receipt.total}
+              <strong>Total:</strong> ₹{formatPrice(receipt.total)}
             </p>
             <p className="text-gray-600">
               <strong>Date:</strong>{" "}

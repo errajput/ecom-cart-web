@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchAPI } from "@/lib/api";
 import { Product } from "@/lib/types";
 import Link from "next/link";
+import { formatPrice } from "@/utils/format";
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -37,7 +38,7 @@ export default function HomePage() {
             className="border p-4 rounded-lg shadow hover:shadow-md transition"
           >
             <h2 className="text-xl font-semibold">{p.name}</h2>
-            <p className="text-gray-600 mb-2">${p.price}</p>
+            <p className="text-gray-600 mb-2">{formatPrice(p.price)}</p>
             <button
               onClick={() => handleAddToCart(p._id)}
               className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"

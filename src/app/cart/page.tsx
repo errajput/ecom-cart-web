@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchAPI } from "@/lib/api";
 import { CartItem } from "@/lib/types";
 import Link from "next/link";
+import { formatPrice } from "@/utils/format";
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -57,7 +58,9 @@ export default function CartPage() {
             >
               <div>
                 <p className="font-semibold">{item.product?.name}</p>
-                <p className="text-gray-600">₹{item.product?.price}</p>
+                <p className="text-gray-600">
+                  {formatPrice(item.product?.price)}
+                </p>
               </div>
 
               <div className="flex items-center gap-3">
@@ -101,7 +104,7 @@ export default function CartPage() {
           ))}
 
           <div className="border-t pt-4 mt-6 flex justify-between items-center">
-            <p className="text-xl font-bold">Total: ₹{total}</p>
+            <p className="text-xl font-bold">Total: {formatPrice(total)}</p>
             <Link
               href="/checkout"
               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mt-4 inline-block"
